@@ -1,43 +1,45 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-
-interface AuthUser {
-  email: string;
-  role: string;
-  token: string;
-}
-
-interface AuthContextType {
-  user: AuthUser | null;
-  login: (data: AuthUser) => void;
-  logout: () => void;
-}
+import { createContext, useContext, useState, ReactNode } from "react";
+import { UserRole } from "../types/user";
+import { logoutRequest } from "../api/authApi";
+import { purgeSession } from "../utils/session";
+import { AuthContextType, AuthUser } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const getStoredUser = (): AuthUser | null => {
+  const token = sessionStorage.getItem("token");
+  const refreshToken = sessionStorage.getItem("refreshToken");
+  const email = sessionStorage.getItem("email");
+  const role = sessionStorage.getItem("role") as UserRole;
+
+  if (token && refreshToken && email && role) {
+    return { token, refreshToken, email, role };
+  }
+
+  return null;
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const email = sessionStorage.getItem("email");
-    const role = sessionStorage.getItem("role");
-
-    if (token && email && role) {
-      setUser({ token, email, role });
-    }
-  }, []);
+  const [user, setUser] = useState<AuthUser | null>(getStoredUser);
 
   const login = (data: AuthUser) => {
     sessionStorage.setItem("token", data.token);
+    sessionStorage.setItem("refreshToken", data.refreshToken);
     sessionStorage.setItem("email", data.email);
     sessionStorage.setItem("role", data.role);
 
     setUser(data);
   };
 
-  const logout = () => {
-    sessionStorage.clear();
-    setUser(null);
+  const logout = async () => {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Error en logoutRequest:", error);
+    } finally {
+      setUser(null);
+      purgeSession();
+    }
   };
 
   return (
@@ -49,10 +51,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-
+  if (!context) throw new Error("useAuth debe ser usado dentro de AuthProvider");
   return context;
 };
