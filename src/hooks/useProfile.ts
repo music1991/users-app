@@ -35,6 +35,7 @@ export function useProfile({ owner }: UseProfileOptions) {
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerKey]);
 
   useEffect(() => {

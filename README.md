@@ -2,13 +2,13 @@
 Este proyecto es una aplicación de gestión de usuarios desarrollada con React y TypeScript. La aplicación permite la autenticación, gestión de perfiles, estudios y direcciones, conectándose a una API REST externa.
 
 ## Stack Tecnológico
-Core: React 19 + TypeScript
+Core: React 19 + TypeScript.
 
-Estilos: Tailwind CSS + Lucide React (iconos)
-Formularios: React Hook Form + Yup (validación)
-Comunicación: Axios (con interceptores para JWT)
-Navegación: React Router Dom
-Notificaciones: React Toastify
+Estilos: Tailwind CSS + Lucide React (iconos).
+Formularios: React Hook Form + Yup (validación).
+Comunicación: Axios (con interceptores para JWT).
+Navegación: React Router Dom.
+Notificaciones: React Toastify.
 
 ## Arquitectura del Proyecto
 El proyecto sigue una estructura modular basada en la separación de responsabilidades:

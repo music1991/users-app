@@ -37,6 +37,7 @@ export function useSessionTimeout() {
     } catch (error) {
       handleManualLogout();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.token]);
 
   const handleContinueSession = async () => {
