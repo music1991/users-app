@@ -1,5 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { Study } from "../types/study";
+import { formatToDate } from "../utils/date";
 
 type StudyItemCardProps = {
   study: Study;
@@ -30,7 +31,7 @@ function StudyItemCard({
           {study.institution}
         </p>
         <p className="text-sm text-gray-500 mt-1">
-          Finalización: {new Date(study.completionDate).toLocaleDateString()}
+          Finalización: {formatToDate(study.completionDate)}
         </p>
       </div>
 

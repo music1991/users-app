@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateStudyRequest, Study } from "../types/study";
 import { studySchema } from "../utils/validationSchemas";
+import { formatToDate, formatToISO } from "../utils/date";
 
 interface StudyModalProps {
   isOpen: boolean;
@@ -35,7 +36,7 @@ function StudyModal({
           ? {
               title: studyToEdit.title,
               institution: studyToEdit.institution,
-              completionDate: studyToEdit.completionDate.slice(0, 10),
+              completionDate: formatToDate(studyToEdit.completionDate),
             }
           : {
               title: "",
@@ -49,6 +50,7 @@ function StudyModal({
   const onSubmit = async (data: CreateStudyRequest) => {
     const payload = {
       ...data,
+      completionDate: formatToISO(data.completionDate),
       ...(userId ? { UserId: userId } : {}),
     };
     await onSave(payload);
